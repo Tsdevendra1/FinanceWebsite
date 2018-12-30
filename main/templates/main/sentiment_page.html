@@ -1,0 +1,83 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div id="url-endpoint" data-url="{% url 'sentiment-data' %}"></div>
+    <canvas id="myChart" width="200" height="100"></canvas>
+    <script>
+        let ctx = document.getElementById("myChart").getContext('2d');
+        let endpoint = document.getElementById('url-endpoint').getAttribute('data-url');
+        let sentimentDataScore = [];
+        let sentimentLabelMonth = [];
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function (data) {
+                // The data for the sentiment scores
+                sentimentDataScore = data.scores;
+                // The month for the sentiment score
+                sentimentLabelMonth = data.months;
+                let myLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: sentimentLabelMonth,
+                        datasets: [{
+                            label: 'Reddit Sentiment Score',
+                            // Line color as well?
+                            backgroundColor: 'rgba(54, 162, 235, 1)',
+                            // Line color
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            data: sentimentDataScore,
+                            fill: false,
+                        },]
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: ''
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Month'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Sentiment Score'
+                                }
+                            }]
+                        }
+                    }
+                });
+
+            },
+            error: function (errorData) {
+                console.log('Error');
+                console.log(errorData);
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block document_ready_script %}
+    <script>
+        homePage();
+    </script>
+{% endblock %}

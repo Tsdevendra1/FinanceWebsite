@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div id="app" class="container mt-3" @click="removeSimilarTickers">
+        {% verbatim %}
+        <div class="row">
+            <div class="col-lg-3">
+                <p id="help-text" style="margin: 0px 0px; font-size: 15px;" class="text-muted pl-2">Search for the
+                    companies
+                    below...</p>
+                <input id="search-bar" type="text" placeholder="Search..." v-model="ticker">
+                <div id="live-search" style="width: 195px; margin-left:6px; margin-top:-10px">
+                    <template v-for="ticker in similarTickers">
+                        <p @click="addData" class="tickers" style="margin-bottom: 0px;">{{ ticker }}</p>
+                    </template>
+                </div>
+                {{ tickerInput }}
+                {{ tickerChosenAmount }}
+                {% endverbatim %}
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div id="data-tickers">
+                        {% if request.user.profile.tickers.all %}
+                            {% for ticker in request.user.profile.tickers.all %}
+                                <span class="ticker-chosen-wrapper">
+                                <span class="ticker-chosen"
+                                      style="display: inline-block;">{{ ticker }}</span><i @click="deleteSelf"
+                                                                                           class="x-button fas fa-times"></i>
+                                </span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="display:none" id="get-results-button">
+                    {% verbatim %}
+                    <div>
+                        <template v-for="(time,index) in availableTimeOptions">
+                            <span :key="time" :class="[index===0?'':'ml-3', 'time-option']" @click="addSelected">{{ time }}</span>
+                        </template>
+                    </div>
+                    {% endverbatim %}
+                    <button @click="getData" id="results-button" disabled="true" type="button" class="btn btn-primary mt-3"
+                    >Get
+                        results
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <canvas id="myChart" width="300" height="300"></canvas>
+        </div>
+        <div id="ticker-url" data-url="{% url 'database-tickers' %}"></div>
+        <div id="csfr">{% csrf_token %}</div>
+        <div id="update-ticker-profile-url" data-url="{% url 'profile-tickers' %}"></div>
+    </div>
+
+{% endblock %}
+
+{% block document_ready_script %}
+    <script>
+        portfolioPage();
+    </script>
+{% endblock %}

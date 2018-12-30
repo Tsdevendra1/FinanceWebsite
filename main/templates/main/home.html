@@ -1,0 +1,56 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <div id="app" class="container">
+        <div class="row mt-3">
+            <div class="col-lg-9 col-md-12 col-sm-12" id="append-marker">
+                <div id="loader" style="margin: 130px auto 0;" class="loader"></div>
+                <reddit-posts></reddit-posts>
+            </div>
+            <div id="stock-price" class="col-lg-3 mt-3 pl-5">
+                <div class="row">
+                    <div style="font-size:20px;border-bottom:1px solid lightgrey; text-align: center" class="col">
+                        <p>Industry ETF trackers</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col stock-info">
+                        <ul style="list-style-type: none; padding:0; font-size: 14px" class="mt-3">
+                            <li>VOO (S&P500): <span id="voo"></span></li>
+                            <li>DIA (Dow Jones): <span id="dia"></span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div style="font-size:20px;border-bottom:1px solid lightgrey; text-align: center" class="col">
+                        <p>Custom Portfolio tracker</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col stock-info">
+                        <ul style="list-style-type: none; padding:0; font-size: 14px" class="mt-3">
+                            {% if profile_tickers %}
+                            {% for tuple in profile_tickers %}
+                                <li>{{ tuple.0 }} (<span class="account-ticker">{{ tuple.1 }}</span>): <span class="ticker-price"></span></li>
+                            {% endfor %}
+                        {% else %}
+                                <li><span class="text-muted">Please select your portfolio on the portfolio page...</span></li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block document_ready_script %}
+    <script>
+        homePage();
+    </script>
+{% endblock %}

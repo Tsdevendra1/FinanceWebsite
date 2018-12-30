@@ -1,0 +1,13 @@
+<nav>
+    <a id="header">DASHBOARD</a>
+    <div class="navigation-links">
+        {% if request.user.is_authenticated %}
+            <a class="link" href="{% url 'home' %}">Home</a>
+            <a class="link" href="{% url 'portfolio' %}">Portfolio</a>
+            <a class="link" href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a class="link" href="{% url 'login' %}">Login</a>
+            <a class="link" href="{% url 'signup' %}">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
